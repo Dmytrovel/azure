@@ -55,7 +55,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         if: github.event.inputs.pipeline_action == 'create'
-        run: terraform apply -out=tfplan -auto-approve -var-file="./env/${{ inputs.environment }}.tfvars"
+        run: terraform apply -auto-approve -var-file="./env/${{ inputs.environment }}.tfvars"
 
       - name: Terraform Destroy
         env:
@@ -64,4 +64,4 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         if: github.event.inputs.pipeline_action == 'destroy'
-        run: terraform destroy -out=tfplan -auto-approve -var-file="./env/${{ inputs.environment }}.tfvars"
+        run: terraform destroy -auto-approve -var-file="./env/${{ inputs.environment }}.tfvars"
