@@ -40,6 +40,11 @@ jobs:
         run: terraform init -backend-config=azurerm.tfbackend -upgrade
             
       - name: Terraform Plan
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         #run: terraform workspace new ${{ inputs.environment }} && terraform workspace select ${{ inputs.environment }} && terraform workspace select ${{ inputs.environment }} && terraform plan -out=tfplan -var-file="./env/${{ inputs.environment }}.tfvars -out=tfplan
         run: terraform workspace new dev && \
              terraform workspace select dev && \
@@ -51,9 +56,19 @@ jobs:
           label: 'Approve Terraform Apply'
 
       - name: Terraform Apply
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         if: github.event.inputs.pipeline_action == 'create'
         run: terraform apply -auto-approve -var-file="./env/${{ inputs.environment }}.tfvars -out=tfplan
 
       - name: Terraform Destroy
+        env:
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         if: github.event.inputs.pipeline_action == 'destroy'
         run: terraform destroy -auto-approve -var-file="./env/${{ inputs.environment }}.tfvars -out=tfplan
