@@ -1,0 +1,3 @@
+resource_group_name  = "terraform_state"
+storage_account_name = "terraform123424252"
+container_name       = "eastus"

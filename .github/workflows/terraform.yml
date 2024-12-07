@@ -1,16 +1,18 @@
+name: Terraform Plan and Apply with Approval
+
 on:
   workflow_dispatch:
     inputs:
       environment:
         description: 'Deployment environment'
         required: true
-        default: 'DEV'
-        type: choice 
+        default: 'qa'
+        type: choice
         options:
-          - DEV
-          - QA
+          - dev
+          - qa
       pipeline_action:
-        description: 'pipeline action'
+        description: 'Pipeline action (create or destroy)'
         required: true
         default: 'create'
         type: choice
@@ -18,19 +20,37 @@ on:
           - create
           - destroy
 
-
 jobs:
-  deploy:
+  terraform:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Display variables
-        run: |
-          echo "Environment: ${{ inputs.environment }}"
-          echo "App Version: ${{ inputs.pipeline_action }}"
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
 
-      - name: Deploy application
-        run: echo "Deploying version ${{ inputs.environment }} to ${{ inputs.environment == 'production' && 'production' || 'staging' }}..." && [ "${{ inputs.environment }}" = "production" ] && echo "Run production commands here" || echo "Run staging commands here"
+      - name: Terraform Init
+        env:
+           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+        run: terraform init -backend-config=${{ inputs.environment }}.azurerm.tfbackend -upgrade
+            
+      - name: Terraform Plan
+        run: terraform workspace new ${{ inputs.environment }} && terraform workspace select ${{ inputs.environment }} && terraform workspace select ${{ inputs.environment }} && terraform plan -out=tfplan -var-file="./env/${{ inputs.environment }}.tfvars -out=tfplan
+
+      - name: Manual Approval for Apply
+        uses: hmarr/auto-approve-action@v1
+        with:
+          label: 'Approve Terraform Apply'
+
+      - name: Terraform Apply
+        if: github.event.inputs.pipeline_action == 'create'
+        run: terraform apply -auto-approve -var-file="./env/${{ inputs.environment }}.tfvars -out=tfplan
+
+      - name: Terraform Destroy
+        if: github.event.inputs.pipeline_action == 'destroy'
+        run: terraform destroy -auto-approve -var-file="./env/${{ inputs.environment }}.tfvars -out=tfplan
