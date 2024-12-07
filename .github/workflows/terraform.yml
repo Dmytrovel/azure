@@ -43,7 +43,7 @@ jobs:
         run: terraform workspace new ${{ inputs.environment }} && terraform workspace select ${{ inputs.environment }} && terraform workspace select ${{ inputs.environment }} && terraform plan -out=tfplan -var-file="./env/${{ inputs.environment }}.tfvars -out=tfplan
 
       - name: Manual Approval for Apply
-        uses: hmarr/auto-approve-action@v1
+        uses: hmarr/auto-approve-action@v4
         with:
           label: 'Approve Terraform Apply'
 
