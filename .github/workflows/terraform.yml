@@ -40,8 +40,11 @@ jobs:
         run: terraform init -backend-config=azurerm.tfbackend -upgrade
             
       - name: Terraform Plan
-        run: terraform workspace new ${{ inputs.environment }} && terraform workspace select ${{ inputs.environment }} && terraform workspace select ${{ inputs.environment }} && terraform plan -out=tfplan -var-file="./env/${{ inputs.environment }}.tfvars -out=tfplan
-
+        #run: terraform workspace new ${{ inputs.environment }} && terraform workspace select ${{ inputs.environment }} && terraform workspace select ${{ inputs.environment }} && terraform plan -out=tfplan -var-file="./env/${{ inputs.environment }}.tfvars -out=tfplan
+        run: terraform workspace new dev && \
+             terraform workspace select dev && \
+             terraform plan -out=tfplan -var-file="./env/dev.tfvars"
+    
       - name: Manual Approval for Apply
         uses: hmarr/auto-approve-action@v4
         with:
