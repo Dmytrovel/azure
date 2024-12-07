@@ -33,10 +33,4 @@ jobs:
           echo "App Version: ${{ inputs.pipeline_action }}"
 
       - name: Deploy application
-        run: |
-          if [ "${{ inputs.environment }}" = "production" ]; then
-            echo "Deploying version ${{ inputs.environment }} to production..."
-            # Додай команди для продакшн-деплою
-          else
-            echo "Deploying version ${{ inputs.pipeline_action }} to staging..."
-            # Додай команди для staging-деплою
+        run: echo "Deploying version ${{ inputs.environment }} to ${{ inputs.environment == 'production' && 'production' || 'staging' }}..." && [ "${{ inputs.environment }}" = "production" ] && echo "Run production commands here" || echo "Run staging commands here"
