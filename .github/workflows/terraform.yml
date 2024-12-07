@@ -47,12 +47,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         run: terraform plan -out=tfplan -var-file="./env/${{ inputs.environment }}.tfvars"
-            
-      - name: Manual Approval for Apply
-        uses: hmarr/auto-approve-action@v4
-        with:
-          label: 'Approve Terraform Apply'
-
+        #################
       - name: Terraform Apply
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
