@@ -2,29 +2,44 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deployment environment'  # Опис параметра
-        required: true  # Чи обов'язковий цей параметр
-        default: 'DEV'  # Значення за замовчуванням
-        type: string  # Тип (string, boolean, choice)
-      version:
-        description: 'Application version'
-        required: false
-        default: 'latest'
-        type: string
+        description: 'Deployment environment'
+        required: true
+        default: 'DEV'
+        type: choice 
+        options:
+          - DEV
+          - QA
+      pipeline_action:
+        description: 'pipeline action'
+        required: true
+        default: 'create'
+        type: choice
+        options:
+          - create
+          - destroy
 
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    # steps:
-    # - uses: actions/checkout@v3
 
-    # - name: Set up Go
-    #   uses: actions/setup-go@v4
-    #   with:
-    #     go-version: '1.21.5'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-name: Manual Trigger with Parameters
+      - name: Display variables
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+          echo "App Version: ${{ inputs.pipeline_action }}"
+
+      - name: Deploy application
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            echo "Deploying version ${{ inputs.environment }} to production..."
+            # Додай команди для продакшн-деплою
+          else
+            echo "Deploying version ${{ inputs.pipeline_action }} to staging..."
+            # Додай команди для staging-деплою
 
 
 
