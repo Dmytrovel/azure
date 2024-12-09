@@ -19,3 +19,15 @@ variable "tags" {
   description = "tags"
   default     = {}
 }
+
+variable "location" {
+  type        = string
+  description = "location of deployed resources"
+  default     = ""
+}
+
+variable "project" {
+  type        = string
+  description = "project name"
+  default     = "test"
+}

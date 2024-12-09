@@ -1,0 +1,14 @@
+output "name" {
+  value       = azurerm_resource_group.this.name
+  description = "Resource Group name"
+}
+
+output "id" {
+  value       = azurerm_resource_group.this.id
+  description = "The ID of the Resource Group"
+}
+
+output "location" {
+  value       = azurerm_resource_group.this.location
+  description = "Resource Group Azure region"
+}
