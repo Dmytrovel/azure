@@ -45,7 +45,7 @@ jobs:
               "timeEnd": '"$EPOCH"',
               "text": "Deployment",
               "tags": [
-                "deployment"
+                "deployment",
                 "kind:${{ inputs.pipeline_action }}",
                 "env:${{ inputs.environment }}"
               ]
