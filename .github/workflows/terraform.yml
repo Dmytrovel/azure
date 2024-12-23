@@ -34,7 +34,7 @@ jobs:
           GRAFANA_ANNOTATIONS_KEY: ${{ secrets.GRAFANA_ANNOTATIONS_KEY }}
           REPOSITORY_NAME: ${{ github.repository }}
         run: |
-          EPOCH=$(($(date +%s%N)/1000000))
+          EPOCH=$(($(date +%s%N)/1000000)) \
       
           curl -X POST "https://a2ops.grafana.net/api/annotations" \
             -H "Content-Type: application/json" \
