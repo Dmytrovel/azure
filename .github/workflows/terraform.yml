@@ -46,6 +46,7 @@ jobs:
               "timeEnd": '"$EPOCH"',
               "text": "Deployment",
               "tags": [
+                "deployment"
                 "kind:deployment",
                 "project:'"$REPOSITORY_NAME"'",
                 "env:${{ inputs.environment }}",
